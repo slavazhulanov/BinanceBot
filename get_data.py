@@ -2,15 +2,15 @@ import requests
 import json
 import pandas as pd
 
-symbol = 'MATICUSDT'
+symbol = 'BTCUSDT'
 
 url = 'https://api.binance.com/api/v3/klines'
 
 params = {
     'symbol': symbol,
     'interval': '15m',
-    'startTime': '1620864000000',  # начало данных в миллисекундах (13 мая 2021 года)
-    'endTime': '1679932542047',
+    'startTime': '1503038700000',  # начало данных в миллисекундах
+    'endTime': '1681627382188',
     'limit': 1000,  # максимальное количество свечей за один запрос
 }
 
@@ -39,4 +39,4 @@ df = pd.DataFrame(data, columns=['timestamp', 'open', 'high', 'low',
 df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
 df['close_time'] = pd.to_datetime(df['close_time'], unit='ms')
 
-df.to_csv('MATICUSDT.csv', index=False)
+df.to_csv('BTCUSDT.csv', index=False)
