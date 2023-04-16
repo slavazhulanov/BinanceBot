@@ -49,7 +49,7 @@ X_train = np.reshape(X_train.values, (X_train.shape[0], X_train.shape[1], 1))
 X_test = np.reshape(X_test.values, (X_test.shape[0], X_test.shape[1], 1))
 
 # Коллбэк для сохранения только лучших эпох
-checkpoint_filepath = 'BTCUSDT_RNN_model.h5'
+checkpoint_filepath = 'BTCUSDT_LSTM_model.h5'
 model_checkpoint_callback = ModelCheckpoint(
     filepath=checkpoint_filepath,
     save_weights_only=False,
