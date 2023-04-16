@@ -5,7 +5,6 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from keras.callbacks import ModelCheckpoint
-# from keras.regularizers import l2
 
 # Загрузка данных из CSV-файла
 df = pd.read_csv('BTCUSDT.csv')
@@ -50,7 +49,7 @@ X_train = np.reshape(X_train.values, (X_train.shape[0], X_train.shape[1], 1))
 X_test = np.reshape(X_test.values, (X_test.shape[0], X_test.shape[1], 1))
 
 # Коллбэк для сохранения только лучших эпох
-checkpoint_filepath = 'BTCUSDT_RNN_model_{epoch:04d}_{val_loss:.8f}.h5'
+checkpoint_filepath = 'BTCUSDT_RNN_model.h5'
 model_checkpoint_callback = ModelCheckpoint(
     filepath=checkpoint_filepath,
     save_weights_only=False,
@@ -59,31 +58,30 @@ model_checkpoint_callback = ModelCheckpoint(
     save_best_only=True)
 
 # Обучение модели
-history = model.fit(X_train, y_train, epochs=1, validation_data=(X_test, y_test), callbacks=[model_checkpoint_callback])
+history = model.fit(X_train, y_train, epochs=5, validation_data=(X_test, y_test), callbacks=[model_checkpoint_callback])
 
-# # График обучения
-# plt.plot(history.history['loss'])
-# plt.plot(history.history['val_loss'])
-# plt.title('Model loss')
-# plt.ylabel('Loss')
-# plt.xlabel('Epoch')
-# plt.legend(['Train', 'Test'], loc='upper left')
-# # plt.show()
-# plt.savefig('loss.png')
-#
+# График обучения
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Model loss')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.legend(['Train', 'Test'], loc='upper left')
+plt.show()
+plt.savefig('loss.png')
+
 # Получение прогнозов на тестовых данных
 y_pred = model.predict(X_test)
-print(y_pred.shape, y_test.shape)
-print(y_pred.shape, y_test.reshape(-1, 11).shape)
-# # Обратное преобразование масштабированных данных
-# y_pred = scaler.inverse_transform(np.array(y_pred).reshape(-1, 11))
-# y_test = scaler.inverse_transform(np.array(y_test).reshape(-1, 11))
-# # Вывод результатов на графике
-# plt.plot(y_test[4], color='red', label='Real BTC Price')
-# plt.plot(y_pred[4], color='blue', label='Predicted BTC Price')
-# plt.title('BTC Price Prediction')
-# plt.xlabel('Time')
-# plt.ylabel('BTC Price')
-# plt.legend()
-# # plt.show()
-# plt.savefig('comparison.png')
+
+# Преобразование тестовых данных в формат ndarray
+y_test = y_test.values.reshape(-1, 1)
+
+# Вывод результатов на графике
+plt.plot(y_test, color='red', label='Real BTC Price', alpha=0.5)
+plt.plot(y_pred, color='blue', label='Predicted BTC Price', alpha=0.5)
+plt.title('BTC Price Prediction')
+plt.xlabel('Time')
+plt.ylabel('BTC Price')
+plt.legend()
+plt.show()
+plt.savefig('comparison.png')
